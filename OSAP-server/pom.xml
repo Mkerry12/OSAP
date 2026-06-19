@@ -105,6 +105,7 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -135,6 +136,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.mqq.OsapApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

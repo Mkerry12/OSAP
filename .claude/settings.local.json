@@ -3,7 +3,12 @@
     "allow": [
       "Bash(mvn compile *)",
       "PowerShell(Get-Command *)",
-      "PowerShell(choco install *)"
+      "PowerShell(choco install *)",
+      "Bash(git status *)",
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git grep *)",
+      "Bash(git add *)"
     ]
   }
 }
