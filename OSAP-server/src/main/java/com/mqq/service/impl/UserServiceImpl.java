@@ -1,30 +1,21 @@
 package com.mqq.service.impl;
 
-import cn.hutool.core.lang.UUID;
-import cn.hutool.core.util.RandomUtil;
+import com.mqq.UserHolder.UserHolder;
 import com.mqq.constant.RedisConstant;
 import com.mqq.constant.SystemConstant;
-import com.mqq.dto.UserPasswordLoginDTO;
-import com.mqq.dto.UserRegisterDTO;
+import com.mqq.dto.UserPasswordUpdateDTO;
+import com.mqq.dto.UserPhoneUpdateDTO;
+import com.mqq.dto.UserProfileUpdateDTO;
 import com.mqq.entity.User;
 import com.mqq.mapper.UserMapper;
 import com.mqq.result.Result;
 import com.mqq.service.UserService;
-import com.mqq.utils.RegexUtils;
-import com.mqq.vo.UserPasswordLoginVO;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
-
-import static com.mqq.constant.RedisConstant.*;
-import static com.mqq.constant.SystemConstant.*;
 
 @Slf4j
 @Service
@@ -32,108 +23,63 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
-    private final StringRedisTemplate stringRedisTemplate;
+    @Override
+    public Result<User> profile() {
 
-    public UserServiceImpl(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
+        User user = userMapper.getById(UserHolder.getCurrentUser().getId());
+
+        return Result.success(user);
     }
 
     @Override
-    public Result login() {
-        return null;
-    }
+    public Result updateProfile(UserProfileUpdateDTO userProfileUpdateDTO) {
 
-    @Override
-    public Result sendCode(String phone, HttpSession session) {
+        Long userId = UserHolder.getCurrentUser().getId();
 
-        if (RegexUtils.isPhoneInvalid(phone)) {
-            return Result.fail(MSG_PHONE_INVALID);
-        }
-
-        String RandomNumber = RandomUtil.randomNumbers(6);
-
-        stringRedisTemplate.opsForValue().set(LOGIN_CODE + phone, RandomNumber, CODE_TIMEOUT, TimeUnit.MINUTES);
-        log.info("发送短信验证码成功,五分钟内有效:{}", RandomNumber);
-
+        userMapper.updateProfile(userProfileUpdateDTO,userId);
         return Result.success();
-
     }
 
     @Override
-    public Result register(UserRegisterDTO userRegisterDTO, HttpSession session) {
+    public Result updatePassword(UserPasswordUpdateDTO userPasswordUpdateDTO) {
 
-        if (RegexUtils.isPhoneInvalid(userRegisterDTO.getPhone())) {
-            return Result.fail(MSG_PHONE_INVALID);
+        String oldPassword = userPasswordUpdateDTO.getOldPassword();
+        String newPassword = userPasswordUpdateDTO.getNewPassword();
+
+        User user = userMapper.getById(UserHolder.getCurrentUser().getId());
+
+        String old_PASSWORD = DigestUtils.md5DigestAsHex(oldPassword.getBytes());
+        if(!user.getPassword().equals(old_PASSWORD)){
+            return Result.fail(SystemConstant.MSG_PASSWORD_OLD_ERROR);
         }
-        if (RegexUtils.isEmailInvalid(userRegisterDTO.getEmail())) {
-            return Result.fail(MSG_EMAIL_INVALID);
+        String phone = user.getPhone();
+        userMapper.updatePassword(newPassword,phone);
+        return Result.success();
+    }
+
+    @Override
+    public Result updatePhone(UserPhoneUpdateDTO userPhoneUpdateDTO) {
+
+        Long userId = UserHolder.getCurrentUser().getId();
+        User user = userMapper.getById(userId);
+
+        if(!userPhoneUpdateDTO.getOldPhone().equals(user.getPhone())){
+            return Result.fail("请输入当前账户的原手机号");
         }
 
-        String RedisCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE + userRegisterDTO.getPhone());
+        String RedisCode = stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_CODE + user.getPhone());
 
-        String codeTakeIn = userRegisterDTO.getCode();
-
-        if(codeTakeIn == null || !codeTakeIn.equals(RedisCode)) {
+        if (!userPhoneUpdateDTO.getCode().equals(RedisCode)) {
             return Result.fail(SystemConstant.MSG_CODE_ERROR);
         }
 
-        String password = userRegisterDTO.getPassword();
-        String PASSWORD = DigestUtils.md5DigestAsHex(password.getBytes());
+        String newPhone = userPhoneUpdateDTO.getNewPhone();
 
-
-        User user = User.builder()
-                .role("USER")
-                .image("DefaultImage")
-                .username(userRegisterDTO.getUsername())
-                .password(PASSWORD)
-                .email(userRegisterDTO.getEmail())
-                .phone(userRegisterDTO.getPhone())
-                .build();
-
-        userMapper.insert(user);
-
+        userMapper.updatePhone(newPhone,userId);
         return Result.success();
 
-    }
-
-    @Override
-    public Result loginWithPassword(UserPasswordLoginDTO userPasswordLoginDTO, HttpSession session) {
-
-        String Username = userPasswordLoginDTO.getUsername();
-        String Password = userPasswordLoginDTO.getPassword();
-
-        User user = userMapper.getByUsername(Username);
-
-        if (user == null) {
-            return Result.fail(MSG_USER_NOT_EXIST);
-        }
-
-        String PASSWORD = user.getPassword();
-        if (!Password.equals(PASSWORD)) {
-            return Result.fail(MSG_CHECK_ACC_OR_PAS);
-        }
-
-        String token = UUID.randomUUID().toString(true);
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("username", user.getUsername());
-        map.put("phone", user.getPhone());
-        map.put("email", user.getEmail());
-
-        stringRedisTemplate.opsForHash().putAll(LOGIN_TOKEN + token,map);
-        stringRedisTemplate.expire(LOGIN_TOKEN,LOGIN_TIMEOUT,TimeUnit.MINUTES);
-
-        UserPasswordLoginVO userPasswordLoginVO = new UserPasswordLoginVO();
-        userPasswordLoginVO.setToken(token);
-        userPasswordLoginVO.setExpiresIn(String.valueOf(RedisConstant.LOGIN_TIMEOUT));
-        User user_vo = User.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .role(user.getRole())
-                .image(user.getImage())
-                .build();
-        userPasswordLoginVO.setUser(user_vo);
-        return Result.success(userPasswordLoginVO);
     }
 }

@@ -26,7 +26,7 @@ public class User implements Serializable {
 
     private String email;
 
-    private String password;
+    private String password = "";
 
     private String image;
 
@@ -35,4 +35,8 @@ public class User implements Serializable {
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;
+
+    private Integer surveyCount = 0;
+
+    private Integer responseCount = 0;
 }

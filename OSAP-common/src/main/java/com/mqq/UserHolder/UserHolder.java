@@ -1,13 +1,16 @@
 package com.mqq.UserHolder;
 
+
+import com.mqq.entity.UserInfo;
+
 public class UserHolder {
 
-    public static ThreadLocal<Long> userLocal = new ThreadLocal<>();
+    public static ThreadLocal<UserInfo> userLocal = new ThreadLocal<>();
 
-    public static void setCurrentUser(Long userId){
-        userLocal.set(userId);
+    public static void setCurrentUser(UserInfo user){
+        userLocal.set(user);
     }
-    public static Long getCurrentUser(){
+    public static UserInfo getCurrentUser(){
         return userLocal.get();
     }
     public static void removeCurrentUser(){

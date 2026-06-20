@@ -33,6 +33,10 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.mqq</groupId>
+            <artifactId>OSAP-pojo</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

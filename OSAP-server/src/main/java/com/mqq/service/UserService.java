@@ -1,16 +1,16 @@
 package com.mqq.service;
 
-import com.mqq.dto.UserPasswordLoginDTO;
-import com.mqq.dto.UserRegisterDTO;
+import com.mqq.dto.UserPasswordUpdateDTO;
+import com.mqq.dto.UserPhoneUpdateDTO;
+import com.mqq.dto.UserProfileUpdateDTO;
 import com.mqq.result.Result;
-import jakarta.servlet.http.HttpSession;
 
 public interface UserService {
-    Result login();
+    Result profile();
 
-    Result sendCode(String phone, HttpSession session);
+    Result updateProfile(UserProfileUpdateDTO userProfileUpdateDTO);
 
-    Result register(UserRegisterDTO userRegisterDTO, HttpSession session);
+    Result updatePassword(UserPasswordUpdateDTO userPasswordUpdateDTO);
 
-    Result loginWithPassword(UserPasswordLoginDTO userPasswordLoginDTO, HttpSession session);
+    Result updatePhone(UserPhoneUpdateDTO userPhoneUpdateDTO);
 }

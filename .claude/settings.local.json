@@ -8,7 +8,9 @@
       "Bash(git push *)",
       "Bash(git reset *)",
       "Bash(git grep *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(mvn dependency:tree -pl OSAP-server -Dincludes=commons-logging)"
     ]
   }
 }
