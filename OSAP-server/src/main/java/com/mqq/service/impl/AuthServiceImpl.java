@@ -1,5 +1,7 @@
 package com.mqq.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import com.mqq.constant.RedisConstant;
@@ -17,9 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.mqq.constant.RedisConstant.*;
@@ -27,6 +31,7 @@ import static com.mqq.constant.SystemConstant.*;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
@@ -112,20 +117,22 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String PASSWORD = user.getPassword();
-        if (!Password.equals(PASSWORD)) {
+        if (!DigestUtils.md5DigestAsHex(userPasswordLoginDTO.getPassword().getBytes()).equals(PASSWORD)) {
             return Result.fail(MSG_CHECK_ACC_OR_PAS);
         }
 
         String token = UUID.randomUUID().toString(true);
 
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("id",user.getId());
-        map.put("username", user.getUsername());
-        map.put("phone", user.getPhone());
-        map.put("email", user.getEmail());
+        Map<String, Object> map = BeanUtil.beanToMap(user,
+                new HashMap<>(),
+                CopyOptions.create()
+                        .ignoreNullValue()
+                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null ? null : fieldValue.toString())
+
+        );
 
         stringRedisTemplate.opsForHash().putAll(LOGIN_TOKEN + token,map);
-        stringRedisTemplate.expire(LOGIN_TOKEN,LOGIN_TIMEOUT,TimeUnit.MINUTES);
+        stringRedisTemplate.expire(LOGIN_TOKEN+token,LOGIN_TIMEOUT,TimeUnit.MINUTES);
 
         UserPasswordLoginVO userPasswordLoginVO = new UserPasswordLoginVO();
         userPasswordLoginVO.setToken(token);

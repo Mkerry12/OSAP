@@ -30,7 +30,11 @@ public class TokenRefreshInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        //使用token从session获取信息
+        if(token.startsWith("Bearer ")){
+            token = token.substring(7);
+        }
+
+        //使用token从Redis获取用户信息
         Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(RedisConstant.LOGIN_TOKEN+token);
         if(map.isEmpty()){
             return true;

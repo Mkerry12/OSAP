@@ -41,6 +41,6 @@ mqq:
   alioss:
     access-key-id: ${OSS_ACCESS_KEY_ID}
     endpoint: oss-cn-beijing.aliyuncs.com
-    bucket-name: sky-take-out-moseery
+    bucket-name: osap-moseery
     access-key-secret: ${OSS_ACCESS_KEY_SECRET}
 

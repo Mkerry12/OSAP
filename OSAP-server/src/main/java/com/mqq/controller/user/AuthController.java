@@ -51,6 +51,7 @@ public class AuthController {
                                  @RequestParam("username") String username,
                                  HttpSession session) {
 
+        log.info("改密码时先对信息进行验证");
         return authService.forgetPassword(phone,username,session);
 
     }
@@ -59,6 +60,7 @@ public class AuthController {
     public Result forgetPasswordCheck(@RequestParam("phone") String phone,
                                       @RequestParam("code") String code,
                                       HttpSession session) {
+        log.info("改密码时对验证码进行验证");
         return authService.forgetPasswordCheck(code,phone,session);
     }
 
