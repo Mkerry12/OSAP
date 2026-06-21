@@ -85,6 +85,7 @@ public class AuthServiceImpl implements AuthService {
         User user = User.builder()
                 .role("USER")
                 .image("DefaultImage")
+                .status(0)
                 .username(userRegisterDTO.getUsername())
                 .password(PASSWORD)
                 .email(userRegisterDTO.getEmail())
