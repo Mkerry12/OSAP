@@ -19,4 +19,21 @@
             </if>
         </if>
     </select>
+
+    <update id="update">
+        update survey
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="theme != null">theme = #{theme},</if>
+            update_at = #{updateTime}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from survey where id = #{id}
+    </delete>
 </mapper>

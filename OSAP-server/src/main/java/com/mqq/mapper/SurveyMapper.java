@@ -3,10 +3,7 @@ package com.mqq.mapper;
 import com.github.pagehelper.Page;
 import com.mqq.dto.PageQuerySurveyDTO;
 import com.mqq.entity.Survey;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface SurveyMapper {
@@ -20,4 +17,12 @@ public interface SurveyMapper {
 
     @Select("select * from survey where id = #{id}")
     Survey getSurveyById(Long id);
+
+    void update(Survey survey);
+
+    @Delete("delete from survey where id = #{id}")
+    int deleteById(Long id);
+
+    @Select("select count(*) from question where survey_id = #{surveyId}")
+    int countQuestions(Long surveyId);
 }
