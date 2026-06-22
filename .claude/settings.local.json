@@ -10,7 +10,12 @@
       "Bash(git grep *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(mvn dependency:tree -pl OSAP-server -Dincludes=commons-logging)"
+      "Bash(mvn dependency:tree -pl OSAP-server -Dincludes=commons-logging)",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell($mvnHome = \"C:\\\\Program Files\\\\JetBrains\\\\IntelliJ IDEA 2026.1\\\\plugins\\\\maven\\\\lib\\\\maven3\"; & \"$mvnHome\\\\bin\\\\mvn.cmd\" compile -f \"C:\\\\Users\\\\mm347\\\\Desktop\\\\Online Survey and Analysis Platform\\\\OSAP\" 2>&1 | Select-Object -Last 80)",
+      "PowerShell($mvnHome = \"C:\\\\Program Files\\\\JetBrains\\\\IntelliJ IDEA 2026.1\\\\plugins\\\\maven\\\\lib\\\\maven3\"; & \"$mvnHome\\\\bin\\\\mvn.cmd\" compile -f \"C:\\\\Users\\\\mm347\\\\Desktop\\\\Online Survey and Analysis Platform\\\\OSAP\" 2>&1 | Select-Object -Last 40)",
+      "PowerShell($mvnHome = \"C:\\\\Program Files\\\\JetBrains\\\\IntelliJ IDEA 2026.1\\\\plugins\\\\maven\\\\lib\\\\maven3\"; & \"$mvnHome\\\\bin\\\\mvn.cmd\" compile -f \"C:\\\\Users\\\\mm347\\\\Desktop\\\\Online Survey and Analysis Platform\\\\OSAP\" 2>&1 | Select-Object -Last 25)",
+      "PowerShell($mvnHome = \"C:\\\\Program Files\\\\JetBrains\\\\IntelliJ IDEA 2026.1\\\\plugins\\\\maven\\\\lib\\\\maven3\"; & \"$mvnHome\\\\bin\\\\mvn.cmd\" compile -f \"C:\\\\Users\\\\mm347\\\\Desktop\\\\Online Survey and Analysis Platform\\\\OSAP\" 2>&1)"
     ]
   }
 }

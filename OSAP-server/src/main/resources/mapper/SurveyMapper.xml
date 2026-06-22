@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mqq.mapper.SurveyMapper">
+    <select id="pageQuery" resultType="com.mqq.entity.Survey">
+        select * from survey
+        <where>
+            <if test ="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test = "keyword != null and keyword != ''">
+                and title like concat('%',#{keyword},'%')
+            </if>
+        </where>
+        <if test="sortBy != null and sortBy != ''">
+            order by ${sortBy}
+            <if test="sortOrder != null and sortOrder != ''">
+                ${sortOrder}
+            </if>
+        </if>
+    </select>
+</mapper>
