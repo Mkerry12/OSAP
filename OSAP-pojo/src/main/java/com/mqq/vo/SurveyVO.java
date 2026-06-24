@@ -24,9 +24,9 @@ public class SurveyVO implements Serializable {
 
     private String status;
 
-    private Boolean isAnonymous;
+    private Integer isAnonymous;
 
-    private Boolean allowMultiSubmit;
+    private Integer allowMultiSubmit;
 
     private Integer questionCount;
 

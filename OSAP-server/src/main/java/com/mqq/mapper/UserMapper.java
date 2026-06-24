@@ -22,7 +22,7 @@ public interface UserMapper {
     @Update("update user set password = #{newPassword} where phone = #{phone}")
     void updatePassword(String phone, String newPassword);
 
-    @Update("update user set username = #{dto.username},phone = #{dto.phone},email = #{dto.email},image = #{dto.image} " +
+    @Update("update user set username = #{dto.username},email = #{dto.email},image = #{dto.image} " +
             "Where id = #{userId} ")
     void updateProfile(@Param("dto") UserProfileUpdateDTO userProfileUpdateDTO, Long userId);
 

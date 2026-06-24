@@ -3,7 +3,7 @@ package com.mqq.constant;
 public class SurveyConstant {
 
     public static final String STATUS_DRAFT = "draft";
-    public static final String STATUS_PUBLISHED = "published";
+    public static final String STATUS_PUBLISHED = "PUBLISHED";
     public static final String STATUS_CLOSED = "closed";
     public static final String TYPE_PUBLIC = "public";
     public static final String TYPE_ASSIGNED = "assigned";

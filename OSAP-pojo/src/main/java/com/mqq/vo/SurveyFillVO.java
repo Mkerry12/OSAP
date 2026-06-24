@@ -19,7 +19,7 @@ public class SurveyFillVO implements Serializable {
 
     private String description;
 
-    private Boolean isAnonymous;
+    private Integer isAnonymous;
 
     private Boolean submitted;
 

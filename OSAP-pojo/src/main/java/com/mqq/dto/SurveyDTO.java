@@ -21,10 +21,10 @@ public class SurveyDTO implements Serializable {
 
     private LocalDateTime endTime;
 
-    private Boolean isAnonymous;
+    private Integer isAnonymous;
 
     private String theme;
 
-    private Boolean allowMultiSubmit;
+    private Integer allowMultiSubmit;
 
 }

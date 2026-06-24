@@ -51,6 +51,8 @@ public class SurveyServiceImpl implements SurveyService {
 
         Survey survey = BeanUtil.copyProperties(surveyDTO, Survey.class);
         survey.setStatus(SurveyConstant.STATUS_DRAFT);
+        if (survey.getIsAnonymous() == null) survey.setIsAnonymous(0);
+        if (survey.getAllowMultiSubmit() == null) survey.setAllowMultiSubmit(0);
         surveyMapper.insert(survey);
 
         SurveyVO surveyVO = BeanUtil.copyProperties(survey, SurveyVO.class);
