@@ -38,4 +38,7 @@ public interface AnswerMapper {
     @Select("select count(*) from answer a join submission s on a.submission_id = s.id " +
             "where s.survey_id = #{surveyId}")
     int countAllBySurveyId(Long surveyId);
+
+    @Delete("delete from answer where submission_id = #{submissionId}")
+    void deleteBySubmissionId(Long submissionId);
 }

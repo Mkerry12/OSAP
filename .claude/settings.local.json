@@ -20,6 +20,10 @@
       "Bash(Select-Object -First 60)",
       "Bash(mvn clean *)",
       "PowerShell(Remove-Item *)",
+      "Bash(python3 *)",
+      "Bash(where mvn *)",
+      "Read(//c/Users/Administrator/**)",
+      "Bash(apt list *)"
       "PowerShell(mvn compile *)",
       "PowerShell(New-Item *)",
       "PowerShell(Move-Item *)"
