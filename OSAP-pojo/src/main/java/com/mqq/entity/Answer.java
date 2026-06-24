@@ -7,24 +7,21 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionOption implements Serializable {
+public class Answer implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
+    private Long submissionId;
+
     private Long questionId;
 
-    private String label;
-
-    private Integer sortOrder;
-
-    private LocalDateTime createAt;
+    private String value;
 }

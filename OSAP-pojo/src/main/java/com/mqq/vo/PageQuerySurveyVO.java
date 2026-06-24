@@ -20,7 +20,7 @@ public class PageQuerySurveyVO implements Serializable {
 
     private String type;
 
-    private LocalDateTime createdTime;
+    private LocalDateTime createAt;
 
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateAt;
 }

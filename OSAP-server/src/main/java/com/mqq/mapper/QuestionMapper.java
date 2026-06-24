@@ -1,6 +1,7 @@
 package com.mqq.mapper;
 
 import com.mqq.entity.Question;
+import com.mqq.entity.QuestionOption;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -18,4 +19,14 @@ public interface QuestionMapper {
 
     @Delete("delete from question where survey_id = #{surveyId}")
     void deleteBySurveyId(Long surveyId);
+
+    @Select("select * from question where id = #{questionId} and survey_id = #{surveyId}")
+    Question selectBySurveyAndId(@Param("surveyId") Long surveyId, @Param("questionId") Long questionId);
+
+    void update(Question question);
+
+    @Delete("delete from question where id = #{id}")
+    void deleteById(Long id);
+
+    void insertOptionsBatch(List<QuestionOption> questionOptionList);
 }

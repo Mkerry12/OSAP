@@ -16,5 +16,5 @@ public class SurveyUpdateVO implements Serializable {
 
     private String title;
 
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateAt;
 }

@@ -34,7 +34,7 @@ public class SurveyVO implements Serializable {
 
     private UserInfo creator;
 
-    private LocalDateTime createdTime;
+    private LocalDateTime createAt;
 
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateAt;
 }

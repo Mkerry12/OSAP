@@ -18,21 +18,25 @@ public class UserController {
 
     @PostMapping("/profile")
     public Result profile(){
+        log.info("查询用户信息");
         return userService.profile();
     }
 
     @PutMapping("/profile")
     public Result updateProfile(@RequestBody UserProfileUpdateDTO  userProfileUpdateDTO){
+        log.info("更新用户资料");
         return userService.updateProfile(userProfileUpdateDTO);
     }
 
     @PostMapping("/update-password")
     public Result updatePassword(@RequestBody UserPasswordUpdateDTO userPasswordUpdateDTO){
+        log.info("修改密码");
         return userService.updatePassword(userPasswordUpdateDTO);
     }
 
     @PutMapping("Update-phone")
     public Result updatePhone(@RequestBody UserPhoneUpdateDTO  userPhoneUpdateDTO){
+        log.info("更新手机号");
         return userService.updatePhone(userPhoneUpdateDTO);
     }
 

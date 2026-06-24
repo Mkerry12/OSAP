@@ -28,12 +28,22 @@
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
             <if test="theme != null">theme = #{theme},</if>
-            update_at = #{updateTime}
+            update_at = #{updateAt}
         </set>
         where id = #{id}
     </update>
 
-    <delete id="deleteById">
-        delete from survey where id = #{id}
-    </delete>
+    <select id="queryMyAssigned" resultType="com.mqq.entity.Survey">
+        select * from survey
+        where status = 'PUBLISHED'
+          and (end_time is null or end_time > now())
+          and (
+              (type = 'PUBLIC' and id not in (
+                  select survey_id from submission where user_id = #{userId}
+              ))
+              or
+              (type = 'ASSIGNED' and find_in_set(#{phone}, target_phones))
+          )
+        order by update_at desc
+    </select>
 </mapper>

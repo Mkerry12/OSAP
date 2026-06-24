@@ -1,27 +1,26 @@
-package com.mqq.vo;
+package com.mqq.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionVO {
-
-    private Long id;
+public class QuestionDTO implements Serializable {
 
     private String type;
 
     private String title;
 
-    private String required;
+    private Boolean required;
 
     private Integer sortOrder;
 
-    List<QuestionOptionVO> options ;
+    private List<QuestionOptionDTO> options;
 
     private Integer minRating;
 

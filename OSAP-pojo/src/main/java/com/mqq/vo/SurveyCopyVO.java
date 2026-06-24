@@ -22,5 +22,5 @@ public class SurveyCopyVO implements Serializable {
 
     private Integer responseCount;
 
-    private LocalDateTime createdTime;
+    private LocalDateTime createAt;
 }

@@ -43,9 +43,9 @@ public class Survey implements Serializable {
 
     private Long creatorId;//与用户表关联
 
-    private LocalDateTime creationTime;
+    private LocalDateTime createAt;
 
-    private LocalDateTime updateTime;
+    private LocalDateTime updateAt;
 
 
 }

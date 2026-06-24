@@ -57,3 +57,36 @@ CREATE TABLE IF NOT EXISTS `question_option`
     KEY `idx_question_id` (`question_id`),
     CONSTRAINT `fk_option_question` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='题目选项表';
+
+
+-- 4. 答卷提交表
+CREATE TABLE IF NOT EXISTS `submission`
+(
+    `id`               BIGINT       NOT NULL AUTO_INCREMENT COMMENT '提交记录ID',
+    `survey_id`        BIGINT       NOT NULL COMMENT '问卷ID',
+    `user_id`          BIGINT       NOT NULL COMMENT '提交用户ID',
+    `idempotency_key`  VARCHAR(64)  DEFAULT NULL COMMENT '幂等键(UUID)，相同键重复请求返回已有 responseId',
+    `duration`         INT          DEFAULT NULL COMMENT '填写耗时(秒)',
+    `submit_at`        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '提交时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_idempotency_key` (`idempotency_key`),
+    KEY `idx_survey_id` (`survey_id`),
+    KEY `idx_user_id` (`user_id`),
+    KEY `idx_survey_user` (`survey_id`, `user_id`),
+    CONSTRAINT `fk_submission_survey` FOREIGN KEY (`survey_id`) REFERENCES `survey` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='答卷提交表';
+
+
+-- 5. 回答明细表
+CREATE TABLE IF NOT EXISTS `answer`
+(
+    `id`              BIGINT NOT NULL AUTO_INCREMENT,
+    `submission_id`   BIGINT NOT NULL COMMENT '所属提交ID',
+    `question_id`     BIGINT NOT NULL COMMENT '题目ID',
+    `value`           TEXT   NOT NULL COMMENT '回答内容：单选传选项ID，多选传逗号分隔ID(如1,3)，填空传文本，评分传数字',
+    PRIMARY KEY (`id`),
+    KEY `idx_submission_id` (`submission_id`),
+    KEY `idx_question_id` (`question_id`),
+    CONSTRAINT `fk_answer_submission` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_answer_question` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='回答明细表';

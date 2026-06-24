@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mqq.mapper.QuestionMapper">
+
+    <update id="update">
+        update question
+        <set>
+            <if test="type != null">type = #{type},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="required != null">required = #{required},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="minRating != null">min_rating = #{minRating},</if>
+            <if test="maxRating != null">max_rating = #{maxRating},</if>
+            update_at = #{updateAt}
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -8,7 +8,9 @@ import java.io.Serializable;
 public class UserProfileUpdateDTO implements Serializable {
 
     private String username;
+
     private String email;
+
     private String image;
 
 }
