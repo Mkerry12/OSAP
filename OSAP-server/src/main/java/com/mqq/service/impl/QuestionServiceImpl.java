@@ -13,7 +13,6 @@ import com.mqq.result.Result;
 import com.mqq.service.QuestionService;
 import com.mqq.vo.QuestionOptionVO;
 import com.mqq.vo.QuestionVO;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

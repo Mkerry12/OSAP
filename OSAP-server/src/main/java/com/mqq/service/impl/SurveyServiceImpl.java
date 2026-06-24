@@ -83,7 +83,7 @@ public class SurveyServiceImpl implements SurveyService {
             BeanUtil.copyProperties(survey, pageQuerySurveyVO);
             pageQuerySurveyVOList.add(pageQuerySurveyVO);
         }
-        return new PageResult(pageNum,sizeNum,page.getTotal(),pageQuerySurveyVOList);
+        return new PageResult<>(pageNum,sizeNum,page.getTotal(),pageQuerySurveyVOList);
 
     }
 

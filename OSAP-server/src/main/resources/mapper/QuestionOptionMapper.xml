@@ -4,7 +4,7 @@
 <mapper namespace="com.mqq.mapper.QuestionOptionMapper">
 
     <insert id="insertOptionsBatch">
-        insert into question_option values
+        insert into question_option(question_id, label, sort_order, create_at) values
         <foreach collection="questionOptionList" item="questionOption" separator=",">
             (#{questionOption.questionId},#{questionOption.label},#{questionOption.sortOrder},#{questionOption.createAt})
         </foreach>

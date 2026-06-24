@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/user/Survey")
+@RequestMapping("/user/survey")
 public class SurveyController {
 
     @Autowired

@@ -45,11 +45,6 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public Result login() {
-        return null;
-    }
-
-    @Override
     public Result sendCode(String phone, HttpSession session) {
 
         if (RegexUtils.isPhoneInvalid(phone)) {
