@@ -28,7 +28,7 @@ public class SurveyController {
 
     @GetMapping("/surveys")
     public Result<PageResult<PageQuerySurveyVO>> GetSurveysByPage(PageQuerySurveyDTO pageQuerySurveyDTO) {
-        log.info("分页查询问卷");
+        log.info("分页我创建的查询问卷");
         PageResult<PageQuerySurveyVO> pageResult = surveyService.pageQuerySurveys(pageQuerySurveyDTO);
 
         return Result.success(pageResult);

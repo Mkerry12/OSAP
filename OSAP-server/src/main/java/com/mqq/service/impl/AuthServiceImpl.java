@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -108,7 +109,14 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userMapper.getByUsername(Username);
 
-        if (user == null) {
+        if(user.getRole().equals("ADMIN")) {
+            if(user.getPassword().equals(Password)&&user.getId()!=null) {
+                UserPasswordLoginVO userPasswordLoginVO = getUserPasswordLoginVO(user);
+                return Result.success(userPasswordLoginVO);
+            }
+        }
+
+        if (user.getId()==null) {
             return Result.fail(MSG_USER_NOT_EXIST);
         }
 
@@ -117,6 +125,13 @@ public class AuthServiceImpl implements AuthService {
             return Result.fail(MSG_CHECK_ACC_OR_PAS);
         }
 
+        UserPasswordLoginVO userPasswordLoginVO = getUserPasswordLoginVO(user);
+        return Result.success(userPasswordLoginVO);
+    }
+
+    //-------------------------------------------------------------抽取该方法作为登录校验
+    @NonNull
+    private UserPasswordLoginVO getUserPasswordLoginVO(User user) {
         String token = UUID.randomUUID().toString(true);
 
         Map<String, Object> map = BeanUtil.beanToMap(user,
@@ -140,7 +155,7 @@ public class AuthServiceImpl implements AuthService {
                 .image(user.getImage())
                 .build();
         userPasswordLoginVO.setUser(user_vo);
-        return Result.success(userPasswordLoginVO);
+        return userPasswordLoginVO;
     }
 
     @Override
