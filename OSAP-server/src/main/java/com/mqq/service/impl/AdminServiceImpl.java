@@ -101,14 +101,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public PageResult<AdminSurveyVO> listSurveys(Integer page, Integer size, String status) {
+    public PageResult<AdminSurveyVO> listSurveys(Integer page, Integer size, String status,String keyword) {
         checkAdmin();
         if (page == null || page < 1) page = 1;
         if (size == null || size < 1) size = 10;
 
         PageHelper.startPage(page, size);
         Page<Survey> surveyPage = surveyMapper.pageQuery(
-                new com.mqq.dto.PageQuerySurveyDTO(page, size, status, null, "create_at", "DESC",null));
+                new com.mqq.dto.PageQuerySurveyDTO(page, size, status, keyword, "create_at", "DESC",null));
 
         List<AdminSurveyVO> records = new ArrayList<>();
         for (Survey survey : surveyPage.getResult()) {

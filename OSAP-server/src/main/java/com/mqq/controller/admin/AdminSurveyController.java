@@ -39,9 +39,11 @@ public class AdminSurveyController {
     public Result<PageResult<AdminSurveyVO>> listSurveys(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
-            @RequestParam(value = "status", required = false) String status) {
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "keyword", required = false) String keyword)
+    {
         log.info("管理员查询问卷列表: page={}, size={}, status={}", page, size, status);
-        PageResult<AdminSurveyVO> pageResult = adminService.listSurveys(page, size, status);
+        PageResult<AdminSurveyVO> pageResult = adminService.listSurveys(page, size, status,keyword);
         return Result.success(pageResult);
     }
 

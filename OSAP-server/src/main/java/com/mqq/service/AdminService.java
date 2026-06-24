@@ -8,6 +8,6 @@ import com.mqq.vo.AdminSurveyVO;
 public interface AdminService {
     PageResult<AdminUserVO> listUsers(Integer page, Integer size, String keyword, String status);
     Result<Void> updateUserStatus(Long userId, String status);
-    PageResult<AdminSurveyVO> listSurveys(Integer page, Integer size, String status);
+    PageResult<AdminSurveyVO> listSurveys(Integer page, Integer size, String status,String keyword);
     Result<Void> forceDeleteSurvey(Long surveyId);
 }
