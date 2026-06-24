@@ -40,4 +40,10 @@ public interface SubmissionMapper {
             "from submission s left join user u on s.user_id = u.id " +
             "where s.survey_id = #{surveyId} order by s.submit_at desc")
     List<Map<String, Object>> pageBySurveyId(Long surveyId);
+
+    @Select("select * from submission where survey_id = #{surveyId}")
+    List<Submission> listBySurveyId(Long surveyId);
+
+    @Delete("delete from submission where survey_id = #{surveyId}")
+    void deleteBySurveyId(Long surveyId);
 }
