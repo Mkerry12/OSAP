@@ -22,4 +22,6 @@ public class PageQuerySurveyDTO implements Serializable {
     private String sortBy;
 
     private String sortOrder;
+
+    private Long createId;
 }

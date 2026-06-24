@@ -108,7 +108,7 @@ public class AdminServiceImpl implements AdminService {
 
         PageHelper.startPage(page, size);
         Page<Survey> surveyPage = surveyMapper.pageQuery(
-                new com.mqq.dto.PageQuerySurveyDTO(page, size, status, null, "create_at", "DESC"));
+                new com.mqq.dto.PageQuerySurveyDTO(page, size, status, null, "create_at", "DESC",null));
 
         List<AdminSurveyVO> records = new ArrayList<>();
         for (Survey survey : surveyPage.getResult()) {

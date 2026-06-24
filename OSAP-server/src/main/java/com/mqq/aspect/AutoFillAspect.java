@@ -32,14 +32,14 @@ public class AutoFillAspect {
 
         // 获取实体参数
         Object[] args = joinPoint.getArgs();
-        if (args == null || args.length == 0 || !(args[0] instanceof Object)) {
+        if (args == null || args.length == 0 || args[0] == null) {
             return;
         }
         Object entity = args[0];
 
         // 准备填充数据
         LocalDateTime now = LocalDateTime.now();
-        Long currentId = UserHolder.getCurrentUser().getId();
+        com.mqq.entity.UserInfo currentUser = UserHolder.getCurrentUser();
 
         if (operationType == OperationType.INSERT) {
             try {
@@ -48,9 +48,11 @@ public class AutoFillAspect {
             try {
                 entity.getClass().getDeclaredMethod("setUpdateAt", LocalDateTime.class).invoke(entity, now);
             } catch (Exception ignored) {}
-            try {
-                entity.getClass().getDeclaredMethod("setCreatorId", Long.class).invoke(entity, currentId);
-            } catch (Exception ignored) {}
+            if (currentUser != null) {
+                try {
+                    entity.getClass().getDeclaredMethod("setCreatorId", Long.class).invoke(entity, currentUser.getId());
+                } catch (Exception ignored) {}
+            }
         } else if (operationType == OperationType.UPDATE) {
             try {
                 entity.getClass().getDeclaredMethod("setUpdateAt", LocalDateTime.class).invoke(entity, now);

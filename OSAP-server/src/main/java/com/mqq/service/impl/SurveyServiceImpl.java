@@ -67,7 +67,11 @@ public class SurveyServiceImpl implements SurveyService {
         Integer pageNum = pageQuerySurveyDTO.getPage();
         Integer sizeNum = pageQuerySurveyDTO.getSize();
 
+        UserInfo userInfo = UserHolder.getCurrentUser();
+        pageQuerySurveyDTO.setCreateId(userInfo.getId());
+
         PageHelper.startPage(pageNum, sizeNum);
+
 
         Page<Survey> page = surveyMapper.pageQuery(pageQuerySurveyDTO);
 

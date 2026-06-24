@@ -48,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
     public Result sendCode(String phone, HttpSession session) {
 
         if (RegexUtils.isPhoneInvalid(phone)) {
+            log.info("手机号格式错误");
             return Result.fail(MSG_PHONE_INVALID);
         }
 
