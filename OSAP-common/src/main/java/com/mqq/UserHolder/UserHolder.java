@@ -10,9 +10,11 @@ public class UserHolder {
     public static void setCurrentUser(UserInfo user){
         userLocal.set(user);
     }
+
     public static UserInfo getCurrentUser(){
         return userLocal.get();
     }
+
     public static void removeCurrentUser(){
         userLocal.remove();
     }

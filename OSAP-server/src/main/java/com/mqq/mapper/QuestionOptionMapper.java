@@ -1,6 +1,8 @@
 package com.mqq.mapper;
 
+import com.mqq.annotation.AutoFill;
 import com.mqq.entity.QuestionOption;
+import com.mqq.enumeration.OperationType;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -11,6 +13,7 @@ public interface QuestionOptionMapper {
     @Select("select * from question_option where question_id = #{questionId} order by sort_order asc")
     List<QuestionOption> getById(Long questionId);
 
+    @AutoFill(OperationType.INSERT)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("insert into question_option(question_id, label, sort_order, create_at) " +
             "values (#{questionId},#{label},#{sortOrder},#{createAt})")

@@ -17,7 +17,7 @@ public class QuestionVO {
 
     private String title;
 
-    private String required;
+    private Boolean required;
 
     private Integer sortOrder;
 

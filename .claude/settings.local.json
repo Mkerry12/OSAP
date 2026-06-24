@@ -23,10 +23,10 @@
       "Bash(python3 *)",
       "Bash(where mvn *)",
       "Read(//c/Users/Administrator/**)",
-      "Bash(apt list *)",
-      "Bash(python -c \"from docx import Document; doc = Document\\('软件设计实践报告-obe模板.docx'\\); [print\\(p.text\\) for p in doc.paragraphs]\")",
-      "Bash(pip install *)",
-      "Bash(python generate_report.py)"
+      "Bash(apt list *)"
+      "PowerShell(mvn compile *)",
+      "PowerShell(New-Item *)",
+      "PowerShell(Move-Item *)"
     ]
   }
 }

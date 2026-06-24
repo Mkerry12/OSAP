@@ -34,7 +34,7 @@ public class UserController {
         return userService.updatePassword(userPasswordUpdateDTO);
     }
 
-    @PutMapping("Update-phone")
+    @PutMapping("/update-phone")
     public Result updatePhone(@RequestBody UserPhoneUpdateDTO  userPhoneUpdateDTO){
         log.info("更新手机号");
         return userService.updatePhone(userPhoneUpdateDTO);
