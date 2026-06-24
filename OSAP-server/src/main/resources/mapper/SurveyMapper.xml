@@ -50,4 +50,15 @@
           )
         order by update_at desc
     </select>
+    <select id="queryMySubmitted" resultType="com.mqq.entity.Survey">
+        select s.*
+        from survey s
+        join (
+            select survey_id, max(submit_at) as latest_submit_at
+            from submission
+            where user_id = #{userId}
+            group by survey_id
+        ) sub on s.id = sub.survey_id
+        order by sub.latest_submit_at desc
+    </select>
 </mapper>

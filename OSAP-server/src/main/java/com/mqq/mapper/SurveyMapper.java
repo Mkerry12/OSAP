@@ -34,4 +34,6 @@ public interface SurveyMapper {
     int incrementResponseCount(Long surveyId);
 
     Page<Survey> queryMyAssigned(@Param("userId") Long userId, @Param("phone") String phone);
+
+    Page<Survey> queryMySubmitted(@Param("userId") Long userId);
 }
