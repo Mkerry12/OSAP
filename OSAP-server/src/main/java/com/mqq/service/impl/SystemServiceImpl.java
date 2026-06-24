@@ -96,7 +96,7 @@ public class SystemServiceImpl implements SystemService {
         backupData.put("backupTime", LocalDateTime.now().toString());
 
         List<Survey> surveys = surveyMapper.pageQuery(
-                new com.mqq.dto.PageQuerySurveyDTO(1, Integer.MAX_VALUE, null, null, null, null));
+                new com.mqq.dto.PageQuerySurveyDTO(1, Integer.MAX_VALUE, null, null, null, null,null));
         List<Map<String, Object>> surveyData = new ArrayList<>();
 
         for (Survey survey : surveys) {

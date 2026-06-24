@@ -20,7 +20,7 @@ public class AuthController {
 
     @PostMapping("/sendcode")
     public Result sendCode(@RequestParam("phone") String phone, HttpSession session) {
-        log.info("发送验证码...");
+        log.info("发送验证码...{}",phone);
         return authService.sendCode(phone, session);
     }
 

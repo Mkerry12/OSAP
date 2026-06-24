@@ -11,6 +11,9 @@
             <if test = "keyword != null and keyword != ''">
                 and title like concat('%',#{keyword},'%')
             </if>
+            <if test="createId != null">
+                and creator_id = #{createId}
+            </if>
         </where>
         <if test="sortBy != null and sortBy != ''">
             order by ${sortBy}
@@ -28,6 +31,7 @@
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
             <if test="theme != null">theme = #{theme},</if>
+            <if test="status != null">status = #{status},</if>
             update_at = #{updateAt}
         </set>
         where id = #{id}
@@ -45,5 +49,16 @@
               (type = 'ASSIGNED' and find_in_set(#{phone}, target_phones))
           )
         order by update_at desc
+    </select>
+    <select id="queryMySubmitted" resultType="com.mqq.entity.Survey">
+        select s.*
+        from survey s
+        join (
+            select survey_id, max(submit_at) as latest_submit_at
+            from submission
+            where user_id = #{userId}
+            group by survey_id
+        ) sub on s.id = sub.survey_id
+        order by sub.latest_submit_at desc
     </select>
 </mapper>
