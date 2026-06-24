@@ -78,7 +78,6 @@ public class QuestionServiceImpl implements QuestionService {
         BeanUtil.copyProperties(questionDTO, question);
         question.setId(questionId);
         question.setSurveyId(surveyId);
-        question.setUpdateAt(LocalDateTime.now());
 
         questionMapper.update(question);
 
@@ -134,7 +133,6 @@ public class QuestionServiceImpl implements QuestionService {
             for (Long questionId : questionIds) {
                 Question question = questionMapper.selectBySurveyAndId(surveyId, questionId);
                 question.setSortOrder(SortOrder);
-                question.setUpdateAt(LocalDateTime.now());
                 questionMapper.update(question);
                 SortOrder++;
             }

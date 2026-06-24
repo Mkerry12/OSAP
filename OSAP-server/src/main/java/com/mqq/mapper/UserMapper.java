@@ -1,12 +1,15 @@
 package com.mqq.mapper;
 
+import com.mqq.annotation.AutoFill;
 import com.mqq.dto.UserProfileUpdateDTO;
 import com.mqq.entity.User;
+import com.mqq.enumeration.OperationType;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserMapper {
 
+    @AutoFill(OperationType.INSERT)
     @Insert("insert into user(username, phone, email, password, role, create_at, update_at,survey_count,response_count) values(#{username},#{phone},#{email},#{password},#{role},#{createAt},#{updateAt},#{surveyCount},#{responseCount})")
     void insert(User user);
 
