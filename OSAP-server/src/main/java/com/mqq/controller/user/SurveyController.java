@@ -76,4 +76,22 @@ public class SurveyController {
         log.info("预览问卷: {}", surveyId);
         return surveyService.previewSurvey(surveyId);
     }
+
+    @GetMapping("/templates")
+    public Result<PageResult<TemplateListVO>> listTemplates(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size) {
+        log.info("查询模板列表: page={}, size={}", page, size);
+        PageResult<TemplateListVO> pageResult = surveyService.listTemplates(page, size);
+        return Result.success(pageResult);
+    }
+
+    @PostMapping("/templates/{templateId}/apply")
+    public Result<SurveyCopyVO> applyTemplate(
+            @PathVariable Long templateId,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "description", required = false) String description) {
+        log.info("应用模板创建问卷: templateId={}, title={}", templateId, title);
+        return surveyService.applyTemplate(templateId, title, description);
+    }
 }

@@ -6,6 +6,7 @@ import com.mqq.result.Result;
 import com.mqq.service.AdminService;
 import com.mqq.vo.AdminSurveyVO;
 import com.mqq.vo.AdminUserVO;
+import com.mqq.vo.TemplateListVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +40,10 @@ public class AdminSurveyController {
     public Result<PageResult<AdminSurveyVO>> listSurveys(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
-            @RequestParam(value = "status", required = false) String status) {
-        log.info("管理员查询问卷列表: page={}, size={}, status={}", page, size, status);
-        PageResult<AdminSurveyVO> pageResult = adminService.listSurveys(page, size, status);
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        log.info("管理员查询问卷列表: page={}, size={}, status={}, keyword={}", page, size, status, keyword);
+        PageResult<AdminSurveyVO> pageResult = adminService.listSurveys(page, size, status, keyword);
         return Result.success(pageResult);
     }
 
@@ -49,5 +51,11 @@ public class AdminSurveyController {
     public Result<Void> forceDeleteSurvey(@PathVariable Long surveyId) {
         log.info("管理员强制删除问卷: surveyId={}", surveyId);
         return adminService.forceDeleteSurvey(surveyId);
+    }
+
+    @PostMapping("/admin/surveys/{surveyId}/to-template")
+    public Result<TemplateListVO> convertToTemplate(@PathVariable Long surveyId) {
+        log.info("管理员将问卷转换为模板: surveyId={}", surveyId);
+        return adminService.convertToTemplate(surveyId);
     }
 }

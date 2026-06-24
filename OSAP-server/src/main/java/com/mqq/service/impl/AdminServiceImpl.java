@@ -1,13 +1,14 @@
 package com.mqq.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.mqq.UserHolder.UserHolder;
-import com.mqq.entity.Submission;
-import com.mqq.entity.Survey;
-import com.mqq.entity.User;
-import com.mqq.entity.UserInfo;
+import com.mqq.dto.QuestionDTO;
+import com.mqq.dto.QuestionOptionDTO;
+import com.mqq.entity.*;
 import com.mqq.mapper.*;
 import com.mqq.result.PageResult;
 import com.mqq.result.Result;
@@ -15,13 +16,16 @@ import com.mqq.service.AdminService;
 import com.mqq.vo.AdminSurveyVO;
 import com.mqq.vo.AdminUserVO;
 import com.mqq.vo.CreatorVO;
+import com.mqq.vo.TemplateListVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -45,6 +49,11 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private AnswerMapper answerMapper;
+
+    @Autowired
+    private TemplateMapper templateMapper;
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private void checkAdmin() {
         UserInfo currentUser = UserHolder.getCurrentUser();
@@ -101,14 +110,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public PageResult<AdminSurveyVO> listSurveys(Integer page, Integer size, String status) {
+    public PageResult<AdminSurveyVO> listSurveys(Integer page, Integer size, String status, String keyword) {
         checkAdmin();
         if (page == null || page < 1) page = 1;
         if (size == null || size < 1) size = 10;
 
         PageHelper.startPage(page, size);
         Page<Survey> surveyPage = surveyMapper.pageQuery(
-                new com.mqq.dto.PageQuerySurveyDTO(page, size, status, null, "create_at", "DESC"));
+                new com.mqq.dto.PageQuerySurveyDTO(page, size, status, keyword, "create_at", "DESC"));
 
         List<AdminSurveyVO> records = new ArrayList<>();
         for (Survey survey : surveyPage.getResult()) {
@@ -153,5 +162,71 @@ public class AdminServiceImpl implements AdminService {
         surveyMapper.deleteById(surveyId);
 
         return Result.success();
+    }
+
+    @Override
+    public Result<TemplateListVO> convertToTemplate(Long surveyId) {
+        checkAdmin();
+        Survey survey = surveyMapper.getSurveyById(surveyId);
+        if (survey == null) {
+            return Result.fail("问卷不存在");
+        }
+
+        List<Question> questions = questionMapper.getById(surveyId);
+        List<QuestionDTO> questionDTOs = questions.stream().map(q -> {
+            QuestionDTO dto = new QuestionDTO();
+            dto.setType(q.getType());
+            dto.setTitle(q.getTitle());
+            dto.setRequired(q.getRequired());
+            dto.setSortOrder(q.getSortOrder());
+            dto.setMinRating(q.getMinRating());
+            dto.setMaxRating(q.getMaxRating());
+
+            List<QuestionOption> options = questionOptionMapper.getById(q.getId());
+            if (options != null && !options.isEmpty()) {
+                List<QuestionOptionDTO> optionDTOs = options.stream().map(o -> {
+                    QuestionOptionDTO oDTO = new QuestionOptionDTO();
+                    oDTO.setLabel(o.getLabel());
+                    oDTO.setSortOrder(o.getSortOrder());
+                    return oDTO;
+                }).collect(Collectors.toList());
+                dto.setOptions(optionDTOs);
+            }
+            return dto;
+        }).collect(Collectors.toList());
+
+        String questionsJson;
+        try {
+            questionsJson = objectMapper.writeValueAsString(questionDTOs);
+        } catch (JsonProcessingException e) {
+            log.error("序列化题目数据失败", e);
+            return Result.fail("序列化题目数据失败");
+        }
+
+        UserInfo userInfo = UserHolder.getCurrentUser();
+        SurveyTemplate template = SurveyTemplate.builder()
+                .title(survey.getTitle())
+                .description(survey.getDescription())
+                .category(null)
+                .questions(questionsJson)
+                .questionCount(questionDTOs.size())
+                .useCount(0)
+                .creatorId(userInfo.getId())
+                .createAt(LocalDateTime.now())
+                .updateAt(LocalDateTime.now())
+                .build();
+
+        templateMapper.insert(template);
+
+        TemplateListVO vo = new TemplateListVO();
+        vo.setId(template.getId());
+        vo.setTitle(template.getTitle());
+        vo.setCategory(template.getCategory());
+        vo.setQuestionCount(template.getQuestionCount());
+        vo.setUseCount(template.getUseCount());
+        vo.setCreateAt(template.getCreateAt());
+
+        log.info("管理员 {} 将问卷 {} 转换为模板 {}", userInfo.getUsername(), surveyId, template.getId());
+        return Result.success(vo);
     }
 }
