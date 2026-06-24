@@ -1,7 +1,9 @@
 package com.mqq.mapper;
 
+import com.mqq.annotation.AutoFill;
 import com.mqq.entity.Question;
 import com.mqq.entity.QuestionOption;
+import com.mqq.enumeration.OperationType;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -12,6 +14,7 @@ public interface QuestionMapper {
     @Select("select * from question where survey_id = #{surveyId} order by sort_order asc")
     List<Question> getById(Long surveyId);
 
+    @AutoFill(OperationType.INSERT)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("insert into question(survey_id, type, title, required, sort_order, min_rating, max_rating, create_at, update_at) " +
             "values (#{surveyId},#{type},#{title},#{required},#{sortOrder},#{minRating},#{maxRating},#{createAt},#{updateAt})")
@@ -23,6 +26,7 @@ public interface QuestionMapper {
     @Select("select * from question where id = #{questionId} and survey_id = #{surveyId}")
     Question selectBySurveyAndId(@Param("surveyId") Long surveyId, @Param("questionId") Long questionId);
 
+    @AutoFill(OperationType.UPDATE)
     void update(Question question);
 
     @Delete("delete from question where id = #{id}")

@@ -6,9 +6,7 @@ import com.mqq.result.Result;
 import jakarta.servlet.http.HttpSession;
 
 public interface AuthService {
-    Result login();
-
-    Result sendCode(String phone, HttpSession session);
+Result sendCode(String phone, HttpSession session);
 
     Result register(UserRegisterDTO userRegisterDTO, HttpSession session);
 

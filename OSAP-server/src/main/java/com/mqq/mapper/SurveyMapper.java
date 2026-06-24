@@ -1,13 +1,16 @@
 package com.mqq.mapper;
 
 import com.github.pagehelper.Page;
+import com.mqq.annotation.AutoFill;
 import com.mqq.dto.PageQuerySurveyDTO;
 import com.mqq.entity.Survey;
+import com.mqq.enumeration.OperationType;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface SurveyMapper {
 
+    @AutoFill(OperationType.INSERT)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("insert into survey(title, description, type, target_phones, status, is_anonymous, allow_multi_submit, theme, start_time, end_time, question_count, response_count, creator_id, create_at, update_at) " +
             "values (#{title},#{description},#{type},#{targetPhones},#{status},#{isAnonymous},#{allowMultiSubmit},#{theme},#{startTime},#{endTime},#{questionCount},#{responseCount},#{creatorId},#{createAt},#{updateAt})")
@@ -18,6 +21,7 @@ public interface SurveyMapper {
     @Select("select * from survey where id = #{id}")
     Survey getSurveyById(Long id);
 
+    @AutoFill(OperationType.UPDATE)
     void update(Survey survey);
 
     @Delete("delete from survey where id = #{id}")

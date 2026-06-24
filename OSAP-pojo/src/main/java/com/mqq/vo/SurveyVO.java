@@ -22,7 +22,7 @@ public class SurveyVO implements Serializable {
 
     private String type;
 
-    private Integer status;
+    private String status;
 
     private Boolean isAnonymous;
 

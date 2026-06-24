@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
+import static com.mqq.constant.SystemConstant.MSG_PHONE_NO_MATCH;
+
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -68,7 +70,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.getById(userId);
 
         if(!userPhoneUpdateDTO.getOldPhone().equals(user.getPhone())){
-            return Result.fail("请输入当前账户的原手机号");
+            return Result.fail(MSG_PHONE_NO_MATCH);
         }
 
         String RedisCode = stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_CODE + user.getPhone());

@@ -24,6 +24,9 @@
       "Bash(where mvn *)",
       "Read(//c/Users/Administrator/**)",
       "Bash(apt list *)"
+      "PowerShell(mvn compile *)",
+      "PowerShell(New-Item *)",
+      "PowerShell(Move-Item *)"
     ]
   }
 }

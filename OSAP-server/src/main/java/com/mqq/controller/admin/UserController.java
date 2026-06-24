@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @PutMapping("/profile")
-    public Result updateProfile(@RequestBody UserProfileUpdateDTO  userProfileUpdateDTO){
+    public Result updateProfile(@RequestBody UserProfileUpdateDTO userProfileUpdateDTO){
         log.info("更新用户资料");
         return userService.updateProfile(userProfileUpdateDTO);
     }
@@ -34,10 +34,9 @@ public class UserController {
         return userService.updatePassword(userPasswordUpdateDTO);
     }
 
-    @PutMapping("Update-phone")
-    public Result updatePhone(@RequestBody UserPhoneUpdateDTO  userPhoneUpdateDTO){
+    @PutMapping("/update-phone")
+    public Result updatePhone(@RequestBody UserPhoneUpdateDTO userPhoneUpdateDTO){
         log.info("更新手机号");
         return userService.updatePhone(userPhoneUpdateDTO);
     }
-
 }
