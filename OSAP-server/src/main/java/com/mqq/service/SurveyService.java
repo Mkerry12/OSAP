@@ -7,6 +7,8 @@ import com.mqq.result.PageResult;
 import com.mqq.result.Result;
 import com.mqq.vo.*;
 
+import java.util.List;
+
 public interface SurveyService {
     Result<SurveyVO> CreateSurvey(SurveyDTO surveyDTO);
 
@@ -25,4 +27,8 @@ public interface SurveyService {
     Result<SurveyCopyVO> copySurvey(Long surveyId);
 
     Result<SurveyPreviewVO> previewSurvey(Long surveyId);
+
+    PageResult<TemplateListVO> listTemplates(Integer page, Integer size);
+
+    Result<SurveyCopyVO> applyTemplate(Long templateId, String title, String description);
 }

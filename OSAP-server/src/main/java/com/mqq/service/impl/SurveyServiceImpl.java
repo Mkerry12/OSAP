@@ -1,17 +1,23 @@
 package com.mqq.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.mqq.UserHolder.UserHolder;
 import com.mqq.constant.SurveyConstant;
 import com.mqq.dto.PageQuerySurveyDTO;
+import com.mqq.dto.QuestionDTO;
+import com.mqq.dto.QuestionOptionDTO;
 import com.mqq.dto.SurveyDTO;
 import com.mqq.dto.SurveyUpdateDTO;
 import com.mqq.entity.*;
 import com.mqq.mapper.QuestionMapper;
 import com.mqq.mapper.QuestionOptionMapper;
 import com.mqq.mapper.SurveyMapper;
+import com.mqq.mapper.TemplateMapper;
 import com.mqq.mapper.UserMapper;
 import com.mqq.result.PageResult;
 import com.mqq.result.Result;
@@ -26,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -43,6 +50,11 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private TemplateMapper templateMapper;
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Result<SurveyVO> CreateSurvey(SurveyDTO surveyDTO) {
@@ -289,6 +301,102 @@ public class SurveyServiceImpl implements SurveyService {
         previewVO.setQuestions(questionVOList);
 
         return Result.success(previewVO);
+    }
+
+    @Override
+    public PageResult<TemplateListVO> listTemplates(Integer page, Integer size) {
+        if (page == null || page < 1) page = 1;
+        if (size == null || size < 1) size = 10;
+
+        PageHelper.startPage(page, size);
+        Page<SurveyTemplate> pageResult = templateMapper.pageQuery(null);
+
+        List<TemplateListVO> records = pageResult.getResult().stream().map(t -> {
+            TemplateListVO vo = new TemplateListVO();
+            BeanUtil.copyProperties(t, vo);
+            return vo;
+        }).collect(Collectors.toList());
+
+        return new PageResult<>(page, size, pageResult.getTotal(), records);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Result<SurveyCopyVO> applyTemplate(Long templateId, String title, String description) {
+        SurveyTemplate template = templateMapper.getById(templateId);
+        if (template == null) {
+            return Result.fail("模板不存在");
+        }
+
+        UserInfo userInfo = UserHolder.getCurrentUser();
+
+        String surveyTitle = (title != null && !title.isBlank()) ? title : template.getTitle();
+        String surveyDescription = (description != null && !description.isBlank())
+                ? description : template.getDescription();
+
+        Survey survey = Survey.builder()
+                .title(surveyTitle)
+                .description(surveyDescription)
+                .type(SurveyConstant.TYPE_PUBLIC)
+                .status(SurveyConstant.STATUS_DRAFT)
+                .isAnonymous(SurveyConstant.NO_ANONYMOUS)
+                .allowMultiSubmit(SurveyConstant.ALLOW_MULTI_SUBMIT_NO_SUBMIT)
+                .questionCount(0)
+                .responseCount(0)
+                .creatorId(userInfo.getId())
+                .createAt(LocalDateTime.now())
+                .updateAt(LocalDateTime.now())
+                .build();
+
+        surveyMapper.insert(survey);
+
+        List<QuestionDTO> questionDTOs;
+        try {
+            questionDTOs = objectMapper.readValue(template.getQuestions(),
+                    new TypeReference<List<QuestionDTO>>() {});
+        } catch (JsonProcessingException e) {
+            log.error("解析模板题目数据失败: templateId={}", templateId, e);
+            return Result.fail("模板数据解析失败");
+        }
+
+        if (questionDTOs != null) {
+            for (QuestionDTO qDTO : questionDTOs) {
+                Question question = new Question();
+                question.setSurveyId(survey.getId());
+                question.setType(qDTO.getType());
+                question.setTitle(qDTO.getTitle());
+                question.setRequired(qDTO.getRequired());
+                question.setSortOrder(qDTO.getSortOrder());
+                question.setMinRating(qDTO.getMinRating());
+                question.setMaxRating(qDTO.getMaxRating());
+                question.setCreateAt(LocalDateTime.now());
+                question.setUpdateAt(LocalDateTime.now());
+                questionMapper.insert(question);
+
+                if (qDTO.getOptions() != null && !qDTO.getOptions().isEmpty()) {
+                    List<QuestionOption> optionList = qDTO.getOptions().stream().map(oDTO -> {
+                        QuestionOption option = new QuestionOption();
+                        option.setQuestionId(question.getId());
+                        option.setLabel(oDTO.getLabel());
+                        option.setSortOrder(oDTO.getSortOrder());
+                        option.setCreateAt(LocalDateTime.now());
+                        return option;
+                    }).collect(Collectors.toList());
+                    questionOptionMapper.insertOptionsBatch(optionList);
+                }
+            }
+            survey.setQuestionCount(questionDTOs.size());
+            surveyMapper.update(survey);
+        }
+
+        templateMapper.incrementUseCount(templateId);
+
+        SurveyCopyVO vo = new SurveyCopyVO(
+                survey.getId(), survey.getTitle(), survey.getStatus(),
+                survey.getQuestionCount(), survey.getResponseCount(),
+                survey.getCreateAt()
+        );
+        return Result.success(vo);
     }
 
 }
