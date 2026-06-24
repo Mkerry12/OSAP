@@ -95,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
 
         userMapper.insert(user);
 
-        return Result.success();
+        return Result.success(REGISTER_SUCCESS);
 
     }
 
@@ -172,7 +172,7 @@ public class AuthServiceImpl implements AuthService {
         if(Rediscode == null || !Rediscode.equals(code)) {
             return Result.fail(SystemConstant.MSG_CODE_ERROR);
         }
-        return Result.success("验证成功，请重置密码");
+        return Result.success(CHECK_SUCCESS_RESET);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class AuthServiceImpl implements AuthService {
 
         userMapper.updatePassword(phone, newPassword);
 
-        return Result.success();
+        return Result.success(RESET_SUCCESS);
     }
 
 
