@@ -20,7 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 .excludePathPatterns(
-                        "/user/auth/**"
+                        "/auth/**"
                 ).order(1);
         registry.addInterceptor(tokenRefreshInterceptor).addPathPatterns("/**").order(0);
     }

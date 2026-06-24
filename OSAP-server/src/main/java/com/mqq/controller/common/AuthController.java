@@ -1,4 +1,4 @@
-package com.mqq.controller.user;
+package com.mqq.controller.common;
 
 import com.mqq.dto.UserPasswordLoginDTO;
 import com.mqq.dto.UserRegisterDTO;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/user/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -27,13 +27,13 @@ public class AuthController {
     @PostMapping("/register")
     public Result register(@RequestBody UserRegisterDTO userRegisterDTO, HttpSession session) {
         log.info("注册用户");
-        return authService.register(userRegisterDTO,session);
+        return authService.register(userRegisterDTO, session);
     }
 
     @PostMapping("/password-login")
-    public Result login(@RequestBody UserPasswordLoginDTO  userPasswordLoginDTO, HttpSession session) {
+    public Result login(@RequestBody UserPasswordLoginDTO userPasswordLoginDTO, HttpSession session) {
         log.info("账号密码登录");
-        return authService.loginWithPassword(userPasswordLoginDTO,session);
+        return authService.loginWithPassword(userPasswordLoginDTO, session);
     }
 
     @PostMapping("/logout")
@@ -50,10 +50,8 @@ public class AuthController {
     public Result forgetPassword(@RequestParam("phone") String phone,
                                  @RequestParam("username") String username,
                                  HttpSession session) {
-
         log.info("改密码时先对信息进行验证");
-        return authService.forgetPassword(phone,username,session);
-
+        return authService.forgetPassword(phone, username, session);
     }
 
     @PostMapping("/forget-password/checkcode")
@@ -61,13 +59,13 @@ public class AuthController {
                                       @RequestParam("code") String code,
                                       HttpSession session) {
         log.info("改密码时对验证码进行验证");
-        return authService.forgetPasswordCheck(code,phone,session);
+        return authService.forgetPasswordCheck(code, phone, session);
     }
 
     @PutMapping("/reset-password")
     public Result resetPassword(@RequestParam("phone") String phone,
                                 @RequestParam("new_password") String new_password,
-                                HttpSession session){
-        return authService.resetPassword(phone,new_password,session);
+                                HttpSession session) {
+        return authService.resetPassword(phone, new_password, session);
     }
 }

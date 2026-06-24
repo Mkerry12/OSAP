@@ -1,4 +1,4 @@
-package com.mqq.controller.user;
+package com.mqq.controller.common;
 
 import com.mqq.result.Result;
 import com.mqq.utils.AliOssUtil;
@@ -14,15 +14,14 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("/user/common")
+@RequestMapping("/common")
 public class UploadController {
 
     @Autowired
     private AliOssUtil aliOssUtil;
 
-    @PostMapping
+    @PostMapping("/upload")
     public Result<String> upload(MultipartFile file) throws IOException {
-
         log.info("文件上传");
         String OriginalFileName = file.getOriginalFilename();
 
@@ -36,7 +35,5 @@ public class UploadController {
             url = aliOssUtil.upload(content,objectName);
         }
         return Result.success(url);
-
     }
-
 }

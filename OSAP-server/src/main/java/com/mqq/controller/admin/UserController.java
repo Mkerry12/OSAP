@@ -1,4 +1,4 @@
-package com.mqq.controller.user;
+package com.mqq.controller.admin;
 
 import com.mqq.dto.UserPasswordUpdateDTO;
 import com.mqq.dto.UserPhoneUpdateDTO;
@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@RestController("userUserController")
-@RequestMapping("/user/user")
+@RestController("adminUserController")
+@RequestMapping("/admin/user")
 public class UserController {
     @Autowired
     private UserService userService;

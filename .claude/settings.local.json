@@ -18,7 +18,8 @@
       "PowerShell($mvnHome = \"C:\\\\Program Files\\\\JetBrains\\\\IntelliJ IDEA 2026.1\\\\plugins\\\\maven\\\\lib\\\\maven3\"; & \"$mvnHome\\\\bin\\\\mvn.cmd\" compile -f \"C:\\\\Users\\\\mm347\\\\Desktop\\\\Online Survey and Analysis Platform\\\\OSAP\" 2>&1)",
       "PowerShell($mvnHome = \"C:\\\\Program Files\\\\JetBrains\\\\IntelliJ IDEA 2026.1\\\\plugins\\\\maven\\\\lib\\\\maven3\"; & \"$mvnHome\\\\bin\\\\mvn.cmd\" compile -f \"C:\\\\Users\\\\mm347\\\\Desktop\\\\Online Survey and Analysis Platform\\\\OSAP\" 2>&1 | Select-Object -Last 30)",
       "Bash(Select-Object -First 60)",
-      "Bash(mvn clean *)"
+      "Bash(mvn clean *)",
+      "PowerShell(Remove-Item *)"
     ]
   }
 }
