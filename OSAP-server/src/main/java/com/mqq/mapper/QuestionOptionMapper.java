@@ -18,4 +18,16 @@ public interface QuestionOptionMapper {
 
     @Delete("delete from question_option where question_id = #{questionId}")
     void deleteByQuestionId(Long questionId);
+
+    @Options(useGeneratedKeys = true,keyProperty = "id")
+    void insertOptionsBatch(List<QuestionOption> questionOptionList);
+
+    @Select({"<script>",
+             "select * from question_option where question_id in ",
+             "<foreach collection='questionIds' item='id' open='(' separator=',' close=')'>",
+             "#{id}",
+             "</foreach>",
+             "order by sort_order asc",
+             "</script>"})
+    List<QuestionOption> getByQuestionIds(@Param("questionIds") List<Long> questionIds);
 }

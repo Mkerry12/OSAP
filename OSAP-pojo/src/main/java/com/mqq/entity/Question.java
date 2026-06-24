@@ -20,14 +20,23 @@ public class Question implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+
     private Long surveyId;
+
     private String type;
+
     private String title;
+
     private Boolean required;
+
     private Integer sortOrder;
+
     private Integer minRating;
+
     private Integer maxRating;
+
     private LocalDateTime createAt;
+
     private LocalDateTime updateAt;
 
     private List<QuestionOption> options;

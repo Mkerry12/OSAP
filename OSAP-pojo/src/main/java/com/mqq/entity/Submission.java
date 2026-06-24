@@ -13,18 +13,20 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionOption implements Serializable {
+public class Submission implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private Long questionId;
+    private Long surveyId;
 
-    private String label;
+    private Long userId;
 
-    private Integer sortOrder;
+    private String idempotencyKey;
 
-    private LocalDateTime createAt;
+    private Integer duration;
+
+    private LocalDateTime submitAt;
 }

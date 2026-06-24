@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class UserPhoneUpdateDTO implements Serializable {
 
     private String oldPhone;
+
     private String newPhone;
 
     private String code;

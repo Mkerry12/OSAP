@@ -53,8 +53,8 @@ public class SurveyServiceImpl implements SurveyService {
         Survey survey = BeanUtil.copyProperties(surveyDTO, Survey.class);
         survey.setStatus(SurveyConstant.STATUS_DRAFT);
         survey.setCreatorId(userInfo.getId());
-        survey.setCreationTime(LocalDateTime.now());
-        survey.setUpdateTime(LocalDateTime.now());
+        survey.setCreateAt(LocalDateTime.now());
+        survey.setUpdateAt(LocalDateTime.now());
 
         surveyMapper.insert(survey);
 
@@ -131,11 +131,11 @@ public class SurveyServiceImpl implements SurveyService {
 
         BeanUtil.copyProperties(updateDTO, survey);
         survey.setId(surveyId);
-        survey.setUpdateTime(LocalDateTime.now());
+        survey.setUpdateAt(LocalDateTime.now());
 
         surveyMapper.update(survey);
 
-        SurveyUpdateVO vo = new SurveyUpdateVO(surveyId, survey.getTitle(), survey.getUpdateTime());
+        SurveyUpdateVO vo = new SurveyUpdateVO(surveyId, survey.getTitle(), survey.getUpdateAt());
         return Result.success(vo);
     }
 
@@ -174,10 +174,10 @@ public class SurveyServiceImpl implements SurveyService {
         }
 
         survey.setStatus(SurveyConstant.STATUS_PUBLISHED);
-        survey.setUpdateTime(LocalDateTime.now());
+        survey.setUpdateAt(LocalDateTime.now());
         surveyMapper.update(survey);
 
-        SurveyStatusVO vo = new SurveyStatusVO(surveyId, survey.getStatus(), survey.getUpdateTime());
+        SurveyStatusVO vo = new SurveyStatusVO(surveyId, survey.getStatus(), survey.getUpdateAt());
         return Result.success(vo);
     }
 
@@ -194,10 +194,10 @@ public class SurveyServiceImpl implements SurveyService {
         }
 
         survey.setStatus(SurveyConstant.STATUS_CLOSED);
-        survey.setUpdateTime(LocalDateTime.now());
+        survey.setUpdateAt(LocalDateTime.now());
         surveyMapper.update(survey);
 
-        SurveyStatusVO vo = new SurveyStatusVO(surveyId, survey.getStatus(), survey.getUpdateTime());
+        SurveyStatusVO vo = new SurveyStatusVO(surveyId, survey.getStatus(), survey.getUpdateAt());
         return Result.success(vo);
     }
 
@@ -218,8 +218,8 @@ public class SurveyServiceImpl implements SurveyService {
         newSurvey.setStatus(SurveyConstant.STATUS_DRAFT);
         newSurvey.setQuestionCount(0);
         newSurvey.setResponseCount(0);
-        newSurvey.setCreationTime(LocalDateTime.now());
-        newSurvey.setUpdateTime(LocalDateTime.now());
+        newSurvey.setCreateAt(LocalDateTime.now());
+        newSurvey.setUpdateAt(LocalDateTime.now());
 
         surveyMapper.insert(newSurvey);
         Long newSurveyId = newSurvey.getId();
@@ -259,7 +259,7 @@ public class SurveyServiceImpl implements SurveyService {
         SurveyCopyVO vo = new SurveyCopyVO(
                 newSurveyId, newSurvey.getTitle(), newSurvey.getStatus(),
                 newSurvey.getQuestionCount(), newSurvey.getResponseCount(),
-                newSurvey.getCreationTime()
+                newSurvey.getCreateAt()
         );
         return Result.success(vo);
     }
