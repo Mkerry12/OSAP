@@ -79,8 +79,8 @@ public class SurveyController {
 
     @GetMapping("/templates")
     public Result<PageResult<TemplateListVO>> listTemplates(
-            @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "size", defaultValue = "10") Integer size) {
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "size") Integer size) {
         log.info("查询模板列表: page={}, size={}", page, size);
         PageResult<TemplateListVO> pageResult = surveyService.listTemplates(page, size);
         return Result.success(pageResult);
