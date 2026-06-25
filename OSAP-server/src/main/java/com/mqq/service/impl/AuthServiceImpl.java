@@ -83,7 +83,6 @@ public class AuthServiceImpl implements AuthService {
         String password = userRegisterDTO.getPassword();
         String PASSWORD = DigestUtils.md5DigestAsHex(password.getBytes());
 
-
         User user = User.builder()
                 .role("USER")
                 .image("https://osap-moseery.oss-cn-beijing.aliyuncs.com/defaultImage.jpg")
@@ -110,6 +109,10 @@ public class AuthServiceImpl implements AuthService {
         String Password = userPasswordLoginDTO.getPassword();
 
         User user = userMapper.getByUsername(Username);
+
+        if(user.getStatus().equals(1)){
+            return Result.fail(SystemConstant.DISABLED);
+        }
 
         if(user.getRole().equals("ADMIN")) {
             if(user.getPassword().equals(Password)&&user.getId()!=null) {

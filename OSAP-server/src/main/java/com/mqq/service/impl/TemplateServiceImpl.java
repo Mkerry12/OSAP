@@ -183,19 +183,23 @@ public class TemplateServiceImpl implements TemplateService {
         List<QuestionDTO> questionDTOs = objectMapper.readValue(template.getQuestions(),
                 new TypeReference<List<QuestionDTO>>() {});
         if (questionDTOs != null) {
-            for (QuestionDTO qDTO : questionDTOs) {
+            for (int i = 0; i < questionDTOs.size(); i++) {
+                QuestionDTO qDTO = questionDTOs.get(i);
                 Question question = BeanUtil.copyProperties(qDTO, Question.class);
                 question.setId(null);
                 question.setSurveyId(survey.getId());
+                question.setSortOrder(qDTO.getSortOrder() != null ? qDTO.getSortOrder() : i);
                 question.setCreateAt(LocalDateTime.now());
                 question.setUpdateAt(LocalDateTime.now());
                 questionMapper.insert(question);
 
                 if (qDTO.getOptions() != null) {
                     List<QuestionOption> optionList = new ArrayList<>();
-                    for (QuestionOptionDTO oDTO : qDTO.getOptions()) {
+                    for (int j = 0; j < qDTO.getOptions().size(); j++) {
+                        QuestionOptionDTO oDTO = qDTO.getOptions().get(j);
                         QuestionOption option = BeanUtil.copyProperties(oDTO, QuestionOption.class);
                         option.setQuestionId(question.getId());
+                        option.setSortOrder(oDTO.getSortOrder() != null ? oDTO.getSortOrder() : j);
                         option.setCreateAt(LocalDateTime.now());
                         optionList.add(option);
                     }
@@ -220,7 +224,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     private TemplateDetailVO buildDetailVO(SurveyTemplate template, UserInfo userInfo) throws JsonProcessingException {
         TemplateDetailVO vo = new TemplateDetailVO();
-        BeanUtil.copyProperties(template, vo);
+        BeanUtil.copyProperties(template, vo, "questions");
 
         CreatorVO creatorVO = userInfo != null
                 ? new CreatorVO(userInfo.getId(), userInfo.getUsername()) : null;

@@ -23,10 +23,11 @@
       "Bash(python3 *)",
       "Bash(where mvn *)",
       "Read(//c/Users/Administrator/**)",
-      "Bash(apt list *)"
+      "Bash(apt list *)",
       "PowerShell(mvn compile *)",
       "PowerShell(New-Item *)",
-      "PowerShell(Move-Item *)"
+      "PowerShell(Move-Item *)",
+      "PowerShell(Test-Path *)"
     ]
   }
 }

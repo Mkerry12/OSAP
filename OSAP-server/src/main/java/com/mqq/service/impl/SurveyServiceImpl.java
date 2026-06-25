@@ -361,13 +361,14 @@ public class SurveyServiceImpl implements SurveyService {
         }
 
         if (questionDTOs != null) {
-            for (QuestionDTO qDTO : questionDTOs) {
+            for (int i = 0; i < questionDTOs.size(); i++) {
+                QuestionDTO qDTO = questionDTOs.get(i);
                 Question question = new Question();
                 question.setSurveyId(survey.getId());
                 question.setType(qDTO.getType());
                 question.setTitle(qDTO.getTitle());
                 question.setRequired(qDTO.getRequired());
-                question.setSortOrder(qDTO.getSortOrder());
+                question.setSortOrder(qDTO.getSortOrder() != null ? qDTO.getSortOrder() : i);
                 question.setMinRating(qDTO.getMinRating());
                 question.setMaxRating(qDTO.getMaxRating());
                 question.setCreateAt(LocalDateTime.now());
@@ -375,14 +376,16 @@ public class SurveyServiceImpl implements SurveyService {
                 questionMapper.insert(question);
 
                 if (qDTO.getOptions() != null && !qDTO.getOptions().isEmpty()) {
-                    List<QuestionOption> optionList = qDTO.getOptions().stream().map(oDTO -> {
+                    List<QuestionOption> optionList = new ArrayList<>();
+                    for (int j = 0; j < qDTO.getOptions().size(); j++) {
+                        QuestionOptionDTO oDTO = qDTO.getOptions().get(j);
                         QuestionOption option = new QuestionOption();
                         option.setQuestionId(question.getId());
                         option.setLabel(oDTO.getLabel());
-                        option.setSortOrder(oDTO.getSortOrder());
+                        option.setSortOrder(oDTO.getSortOrder() != null ? oDTO.getSortOrder() : j);
                         option.setCreateAt(LocalDateTime.now());
-                        return option;
-                    }).collect(Collectors.toList());
+                        optionList.add(option);
+                    }
                     questionOptionMapper.insertOptionsBatch(optionList);
                 }
             }

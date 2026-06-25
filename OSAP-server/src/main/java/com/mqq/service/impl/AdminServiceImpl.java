@@ -92,9 +92,9 @@ public class AdminServiceImpl implements AdminService {
 
         Integer statusCode;
         if ("ACTIVE".equalsIgnoreCase(status)) {
-            statusCode = 1;
-        } else if ("DISABLED".equalsIgnoreCase(status)) {
             statusCode = 0;
+        } else if ("DISABLED".equalsIgnoreCase(status)) {
+            statusCode = 1;
         } else {
             return Result.fail("无效的状态值，仅支持 ACTIVE 或 DISABLED");
         }
@@ -228,5 +228,24 @@ public class AdminServiceImpl implements AdminService {
 
         log.info("管理员 {} 将问卷 {} 转换为模板 {}", userInfo.getUsername(), surveyId, template.getId());
         return Result.success(vo);
+    }
+
+    @Override
+    public Result<Void> deleteUser(Long userId) {
+        checkAdmin();
+
+        User user = userMapper.getById(userId);
+        if (user == null) {
+            return Result.fail("用户不存在");
+        }
+
+        UserInfo currentUser = UserHolder.getCurrentUser();
+        if (currentUser != null && currentUser.getId().equals(userId)) {
+            return Result.fail("不能删除自己的账号");
+        }
+
+        userMapper.deleteById(userId);
+        log.info("管理员 {} 删除了用户 userId={} username={}", currentUser.getUsername(), userId, user.getUsername());
+        return Result.success();
     }
 }

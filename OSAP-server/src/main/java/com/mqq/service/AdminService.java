@@ -12,4 +12,6 @@ public interface AdminService {
     PageResult<AdminSurveyVO> listSurveys(Integer page, Integer size, String status, String keyword);
     Result<Void> forceDeleteSurvey(Long surveyId);
     Result<TemplateListVO> convertToTemplate(Long surveyId);
+
+    Result<Void> deleteUser(Long userId);
 }

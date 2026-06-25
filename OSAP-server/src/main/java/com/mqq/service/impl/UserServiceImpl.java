@@ -59,7 +59,8 @@ public class UserServiceImpl implements UserService {
             return Result.fail(SystemConstant.MSG_PASSWORD_OLD_ERROR);
         }
         String phone = user.getPhone();
-        userMapper.updatePassword(newPassword,phone);
+        String new_PASSWORD = DigestUtils.md5DigestAsHex(newPassword.getBytes());
+        userMapper.updatePassword(new_PASSWORD,phone);
         return Result.success();
     }
 

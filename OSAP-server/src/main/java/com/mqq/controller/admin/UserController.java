@@ -4,6 +4,7 @@ import com.mqq.dto.UserPasswordUpdateDTO;
 import com.mqq.dto.UserPhoneUpdateDTO;
 import com.mqq.dto.UserProfileUpdateDTO;
 import com.mqq.result.Result;
+import com.mqq.service.AdminService;
 import com.mqq.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AdminService adminService;
 
     @PostMapping("/profile")
     public Result profile(){
@@ -38,5 +42,11 @@ public class UserController {
     public Result updatePhone(@RequestBody UserPhoneUpdateDTO userPhoneUpdateDTO){
         log.info("更新手机号");
         return userService.updatePhone(userPhoneUpdateDTO);
+    }
+
+    @DeleteMapping("/{userId}")
+    public Result deleteUser(@PathVariable Long userId){
+        log.info("管理员删除用户 userId={}", userId);
+        return adminService.deleteUser(userId);
     }
 }

@@ -18,4 +18,5 @@ public class SystemConstant {
     public static final String ALREADY_EXISTS = "已经存在用户";
     public static final String CHECK_SUCCESS_RESET = "验证成功，请重置密码";
     public static final String RESET_SUCCESS = "密码重置成功";
+    public static final String DISABLED = "你已经被禁用了";
 }
