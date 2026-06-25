@@ -38,10 +38,13 @@ public class QuestionController {
 
     }
 
+/*
+
     @PutMapping("/surveys/{surveyId}/questions/order")
     public Result QuestionOrder(@PathVariable Long surveyId, @RequestBody QuestionIdGroupDTO questionIdGroupDTO) {
-        log.info("更新题目: surveyId={}, questionDTO={}", surveyId, questionIdGroupDTO);
+        log.info("更新题目排序: surveyId={}, questionDTO={}", surveyId, questionIdGroupDTO);
         return questionService.QuestionOrder(surveyId,questionIdGroupDTO);
     }
+    */
 
 }

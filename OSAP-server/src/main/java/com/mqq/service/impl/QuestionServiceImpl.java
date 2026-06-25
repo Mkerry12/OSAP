@@ -81,10 +81,8 @@ public class QuestionServiceImpl implements QuestionService {
 
         questionMapper.update(question);
 
-        // 先删除旧选项（无论新选项是否为空，确保从 RADIO→TEXT 等切型不会残留数据）
         questionOptionMapper.deleteByQuestionId(questionId);
 
-        // 再插入新选项（TEXT/RATING 题型不传 options，自然跳过）
         List<QuestionOptionDTO> optionDTOList = questionDTO.getOptions();
         if (CollectionUtil.isNotEmpty(optionDTOList)) {
             List<QuestionOption> optionList = new ArrayList<>();
@@ -97,7 +95,6 @@ public class QuestionServiceImpl implements QuestionService {
             questionOptionMapper.insertOptionsBatch(optionList);
         }
 
-        // Build response VO
         QuestionVO questionVO = BeanUtil.copyProperties(question, QuestionVO.class);
 
         List<QuestionOptionVO> optionVOList = new ArrayList<>();
@@ -138,6 +135,5 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }
         return Result.success(SUCCESS_ORDER_CHANGE);
-
     }
 }

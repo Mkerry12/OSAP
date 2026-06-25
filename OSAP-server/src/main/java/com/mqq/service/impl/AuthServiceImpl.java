@@ -86,13 +86,12 @@ public class AuthServiceImpl implements AuthService {
 
         User user = User.builder()
                 .role("USER")
-                .image("DefaultImage")
+                .image("https://osap-moseery.oss-cn-beijing.aliyuncs.com/defaultImage.jpg")
                 .status(0)
                 .username(userRegisterDTO.getUsername())
                 .password(PASSWORD)
                 .email(userRegisterDTO.getEmail())
                 .phone(userRegisterDTO.getPhone())
-
                 .build();
 
         userMapper.insert(user);
@@ -104,6 +103,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Result loginWithPassword(UserPasswordLoginDTO userPasswordLoginDTO, HttpSession session) {
 
+        /**
+         * 校验密码和存redis存token分离
+         */
         String Username = userPasswordLoginDTO.getUsername();
         String Password = userPasswordLoginDTO.getPassword();
 
