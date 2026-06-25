@@ -1,5 +1,6 @@
 package com.mqq.service.impl;
 
+import com.mqq.constant.SystemConstant;
 import com.mqq.entity.*;
 import com.mqq.mapper.*;
 import com.mqq.result.Result;
@@ -18,7 +19,6 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,19 +39,6 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     @Autowired
     private AnswerMapper answerMapper;
-
-        private static final Pattern CHINESE_PUNCTUATION = Pattern.compile("[，。！？、；：]+");
-    private static final Set<String> STOP_WORDS = Set.of(
-            "的", "了", "在", "是", "我", "有", "和", "就", "不", "人", "都",
-            "一", "个", "上", "也", "很", "到", "说", "要", "去", "你", "会",
-            "着", "没有", "看", "好", "自己", "这", "那", "什么", "怎么",
-            "因为", "所以", "但是", "如果", "虽然", "不过", "而且", "或者",
-            "还是", "只是", "可以", "应该", "能够", "需要", "可能", "必须",
-            "已经", "正在", "关于", "对于", "按照", "根据", "除了", "通过",
-            "同时", "比较", "非常", "更加", "特别", "一些", "以及", "及其",
-            "the", "a", "an", "is", "are", "was", "were", "be", "been",
-            "it", "its", "this", "that", "to", "in", "on", "for", "and"
-    );
 
     @Override
     public Result<SurveyOverviewVO> getOverview(Long surveyId) {
@@ -142,10 +129,10 @@ public class AnalysisServiceImpl implements AnalysisService {
             if (text == null || text.isBlank()) continue;
 
             // 按标点符号拆分
-            String[] segments = CHINESE_PUNCTUATION.split(text.toLowerCase());
+            String[] segments = SystemConstant.CHINESE_PUNCTUATION.split(text.toLowerCase());
             for (String segment : segments) {
                 segment = segment.trim();
-                if (segment.length() < 2 || STOP_WORDS.contains(segment)) continue;
+                if (segment.length() < 2 || SystemConstant.STOP_WORDS.contains(segment)) continue;
                 wordCounts.merge(segment, 1, Integer::sum);
             }
         }
