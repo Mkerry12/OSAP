@@ -10,4 +10,12 @@
         </foreach>
     </insert>
 
+    <select id="getByQuestionIds" resultType="com.mqq.entity.QuestionOption">
+        select * from question_option where question_id in
+        <foreach collection="questionIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by sort_order asc
+    </select>
+
 </mapper>

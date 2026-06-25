@@ -35,17 +35,5 @@ public interface UserMapper {
     @Update("update user set status = #{status} where id = #{userId}")
     void updateStatus(@Param("userId") Long userId, @Param("status") Integer status);
 
-    @Select({"<script>",
-             "select * from user",
-             "<where>",
-             "<if test='keyword != null and keyword != \"\"'>",
-             "and (username like concat('%',#{keyword},'%') or phone like concat('%',#{keyword},'%'))",
-             "</if>",
-             "<if test='status != null and status != \"\"'>",
-             "and status = #{status}",
-             "</if>",
-             "</where>",
-             "order by create_at desc",
-             "</script>"})
     Page<User> pageQuery(@Param("keyword") String keyword, @Param("status") String status);
 }

@@ -44,7 +44,6 @@ public class TokenRefreshInterceptor implements HandlerInterceptor {
 
         UserHolder.setCurrentUser(userInfo);
 
-
         stringRedisTemplate.expire(RedisConstant.LOGIN_TOKEN+token,RedisConstant.LOGIN_TIMEOUT, TimeUnit.MINUTES);
 
         return true;

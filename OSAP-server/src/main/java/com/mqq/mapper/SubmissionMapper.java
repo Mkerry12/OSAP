@@ -44,14 +44,6 @@ public interface SubmissionMapper {
     @Select("select * from submission where survey_id = #{surveyId}")
     List<Submission> listBySurveyId(Long surveyId);
 
-    @Select({"<script>",
-             "select survey_id, max(submit_at) as latest_submit_at from submission",
-             "where survey_id in",
-             "<foreach collection='ids' item='id' open='(' separator=',' close=')'>",
-             "#{id}",
-             "</foreach>",
-             "group by survey_id",
-             "</script>"})
     List<Map<String, Object>> batchLatestSubmitAt(@Param("ids") List<Long> ids);
 
     @Delete("delete from submission where survey_id = #{surveyId}")
