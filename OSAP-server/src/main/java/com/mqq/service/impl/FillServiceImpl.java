@@ -287,12 +287,13 @@ public class FillServiceImpl implements FillService {
 
         Long userId = UserHolder.getCurrentUser().getId();
         User currentUser = userMapper.getById(userId);
-        String phone = currentUser != null ? currentUser.getPhone() : "";
+        String phone = currentUser.getPhone();
 
         PageHelper.startPage(page, size);
         Page<Survey> surveyPage = surveyMapper.queryMyAssigned(userId, phone);
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        //维护map来缓存creator，减少数据库操作
         Map<Long, User> creatorCache = new HashMap<>();
 
         List<MyAssignedSurveyVO> records = new ArrayList<>();
@@ -306,7 +307,6 @@ public class FillServiceImpl implements FillService {
             vo.setEndTime(survey.getEndTime() != null ? survey.getEndTime().format(dtf) : null);
             vo.setCreatedAt(survey.getCreateAt() != null ? survey.getCreateAt().format(dtf) : null);
 
-            // 缓存查询创建者
             Long creatorId = survey.getCreatorId();
             if (!creatorCache.containsKey(creatorId)) {
                 creatorCache.put(creatorId, userMapper.getById(creatorId));
@@ -320,61 +320,39 @@ public class FillServiceImpl implements FillService {
     }
 
     @Override
-    public PageResult<MySubmittedSurveyVO> getMySubmitted(Integer page, Integer size) {
+    public PageResult<MySubmissionRecordVO> getMySubmitted(Integer page, Integer size) {
         if (page == null || page < 1) page = 1;
         if (size == null || size < 1) size = 10;
 
         Long userId = UserHolder.getCurrentUser().getId();
 
         PageHelper.startPage(page, size);
-        Page<Survey> surveyPage = surveyMapper.queryMySubmitted(userId);
+        List<SubmittedRecordRow> rows = submissionMapper.pageMySubmitted(userId);
+        Page<SubmittedRecordRow> pageResult = (Page<SubmittedRecordRow>) rows;
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        // 批量查询各问卷的最新提交时间
-        List<Long> surveyIds = surveyPage.getResult().stream().map(Survey::getId).toList();
-        Map<Long, String> latestSubmitMap = new HashMap<>();
-        if (!surveyIds.isEmpty()) {
-            List<Map<String, Object>> times = submissionMapper.batchLatestSubmitAt(surveyIds);
-            for (Map<String, Object> row : times) {
-                Long sid = ((Number) row.get("survey_id")).longValue();
-                Object sa = row.get("latest_submit_at");
-                if (sa != null) {
-                    if (sa instanceof java.sql.Timestamp ts) {
-                        latestSubmitMap.put(sid, ts.toLocalDateTime().format(dtf));
-                    } else {
-                        latestSubmitMap.put(sid, sa.toString());
-                    }
-                }
-            }
-        }
-
         Map<Long, User> creatorCache = new HashMap<>();
 
-        List<MySubmittedSurveyVO> records = new ArrayList<>();
-        for (Survey survey : surveyPage.getResult()) {
-            MySubmittedSurveyVO vo = new MySubmittedSurveyVO();
-            vo.setId(survey.getId());
-            vo.setTitle(survey.getTitle());
-            vo.setDescription(survey.getDescription());
-            vo.setType(survey.getType());
-            vo.setStatus(survey.getStatus());
-            vo.setQuestionCount(survey.getQuestionCount());
-            vo.setAllowMultiSubmit(survey.getAllowMultiSubmit());
-            vo.setEndTime(survey.getEndTime() != null ? survey.getEndTime().format(dtf) : null);
-            vo.setSubmittedAt(latestSubmitMap.get(survey.getId()));
+        List<MySubmissionRecordVO> records = new ArrayList<>();
+        for (SubmittedRecordRow row : pageResult) {
+            MySubmissionRecordVO vo = new MySubmissionRecordVO();
+            vo.setResponseId(row.getSubmissionId());
+            vo.setSurveyId(row.getSurveyId());
+            vo.setTitle(row.getTitle());
+            vo.setType(row.getType());
+            vo.setStatus(row.getStatus());
+            vo.setQuestionCount(row.getQuestionCount());
+            vo.setSubmitAt(row.getSubmitAt() != null ? row.getSubmitAt().format(dtf) : null);
 
-            // 缓存查询创建者
-            Long creatorId = survey.getCreatorId();
-            if (!creatorCache.containsKey(creatorId)) {
-                creatorCache.put(creatorId, userMapper.getById(creatorId));
+            if (!creatorCache.containsKey(row.getCreatorId())) {
+                creatorCache.put(row.getCreatorId(), userMapper.getById(row.getCreatorId()));
             }
-            vo.setCreator(CreatorVO.from(creatorCache.get(creatorId)));
+            vo.setCreator(CreatorVO.from(creatorCache.get(row.getCreatorId())));
 
             records.add(vo);
         }
 
-        return new PageResult<>(page, size, surveyPage.getTotal(), records);
+        return new PageResult<>(page, size, pageResult.getTotal(), records);
     }
 
     /**

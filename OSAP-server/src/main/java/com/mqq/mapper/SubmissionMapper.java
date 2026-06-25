@@ -1,5 +1,6 @@
 package com.mqq.mapper;
 
+import com.mqq.entity.SubmittedRecordRow;
 import com.mqq.entity.Submission;
 import org.apache.ibatis.annotations.*;
 
@@ -45,6 +46,8 @@ public interface SubmissionMapper {
     List<Submission> listBySurveyId(Long surveyId);
 
     List<Map<String, Object>> batchLatestSubmitAt(@Param("ids") List<Long> ids);
+
+    List<SubmittedRecordRow> pageMySubmitted(@Param("userId") Long userId);
 
     @Delete("delete from submission where survey_id = #{surveyId}")
     void deleteBySurveyId(Long surveyId);

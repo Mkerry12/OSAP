@@ -5,7 +5,7 @@ import com.mqq.result.PageResult;
 import com.mqq.result.Result;
 import com.mqq.service.FillService;
 import com.mqq.vo.MyAssignedSurveyVO;
-import com.mqq.vo.MySubmittedSurveyVO;
+import com.mqq.vo.MySubmissionRecordVO;
 import com.mqq.vo.ResponseDetailVO;
 import com.mqq.vo.ResponseListItemVO;
 import com.mqq.vo.SubmitVO;
@@ -23,6 +23,7 @@ public class FillController {
 
     @GetMapping("/surveys/{surveyId}/fill")
     public Result getFill(@PathVariable("surveyId") Long surveyId) {
+
         return fillService.getFill(surveyId);
     }
 
@@ -62,11 +63,11 @@ public class FillController {
     }
 
     @GetMapping("/surveys/my-submitted")
-    public Result<PageResult<MySubmittedSurveyVO>> getMySubmitted(
+    public Result<PageResult<MySubmissionRecordVO>> getMySubmitted(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
         log.info("获取已填问卷列表: page={}, size={}", page, size);
-        PageResult<MySubmittedSurveyVO> pageResult = fillService.getMySubmitted(page, size);
+        PageResult<MySubmissionRecordVO> pageResult = fillService.getMySubmitted(page, size);
         return Result.success(pageResult);
     }
 }
